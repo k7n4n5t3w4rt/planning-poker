@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Planning Poker</title>
+<meta name="description" content="Planning poker cards for your phone. Swipe to your estimate, then turn the phone around to reveal.">
+<meta name="theme-color" content="#1d3b40">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Poker">
+<style>
+  :root {
+    --bg: #1d3b40;
+    --ink: #1d3b40;
+    --card-w: min(88vw, 49vh);
+  }
+  @supports (height: 100dvh) {
+    :root { --card-w: min(88vw, 49dvh); }
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    overscroll-behavior: none;
+    background: var(--bg);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  .deck {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior: none;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x;
+  }
+  .deck::-webkit-scrollbar { display: none; }
+  .slot {
+    flex: 0 0 100%;
+    width: 100vw;
+    height: 100%;
+    display: grid;
+    place-items: center;
+    scroll-snap-align: center;
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  }
+  .card {
+    position: relative;
+    width: var(--card-w);
+    aspect-ratio: 5 / 7;
+    background: #fff;
+    border-radius: 6% / 4.3%;
+    box-shadow: 0 0.6em 1.6em rgba(0, 0, 0, 0.35), 0 0.15em 0.4em rgba(0, 0, 0, 0.25);
+    container-type: inline-size;
+    display: grid;
+    place-items: center;
+    color: var(--ink);
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+    touch-action: pan-x;
+  }
+  .num {
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    font-variant-numeric: tabular-nums;
+    font-size: calc(var(--card-w) * 0.56);
+    font-size: 56cqw;
+  }
+  .corner {
+    position: absolute;
+    font-weight: 700;
+    line-height: 1;
+    font-size: calc(var(--card-w) * 0.12);
+    font-size: 12cqw;
+  }
+  .tl { top: 6cqw; left: 7cqw; }
+  .br { bottom: 6cqw; right: 7cqw; transform: rotate(180deg); }
+</style>
+</head>
+<body>
+<main class="deck" id="deck">
+  <div class="slot"><div class="card" role="img" aria-label="0 points"><span class="corner tl" aria-hidden="true">0</span><span class="num" aria-hidden="true">0</span><span class="corner br" aria-hidden="true">0</span></div></div>
+  <div class="slot"><div class="card" role="img" aria-label="1 point"><span class="corner tl" aria-hidden="true">1</span><span class="num" aria-hidden="true">1</span><span class="corner br" aria-hidden="true">1</span></div></div>
+  <div class="slot"><div class="card" role="img" aria-label="2 points"><span class="corner tl" aria-hidden="true">2</span><span class="num" aria-hidden="true">2</span><span class="corner br" aria-hidden="true">2</span></div></div>
+  <div class="slot"><div class="card" role="img" aria-label="3 points"><span class="corner tl" aria-hidden="true">3</span><span class="num" aria-hidden="true">3</span><span class="corner br" aria-hidden="true">3</span></div></div>
+  <div class="slot"><div class="card" role="img" aria-label="5 points"><span class="corner tl" aria-hidden="true">5</span><span class="num" aria-hidden="true">5</span><span class="corner br" aria-hidden="true">5</span></div></div>
+  <div class="slot"><div class="card" role="img" aria-label="8 points"><span class="corner tl" aria-hidden="true">8</span><span class="num" aria-hidden="true">8</span><span class="corner br" aria-hidden="true">8</span></div></div>
+  <div class="slot"><div class="card" role="img" aria-label="13 points"><span class="corner tl" aria-hidden="true">13</span><span class="num" aria-hidden="true">13</span><span class="corner br" aria-hidden="true">13</span></div></div>
+  <div class="slot"><div class="card" role="img" aria-label="21 points"><span class="corner tl" aria-hidden="true">21</span><span class="num" aria-hidden="true">21</span><span class="corner br" aria-hidden="true">21</span></div></div>
+</main>
+<script>
+  // Always open on card 0.
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  var deck = document.getElementById('deck');
+  function toStart() { deck.scrollLeft = 0; }
+  toStart();
+  addEventListener('load', toStart);
+  addEventListener('pageshow', toStart);
+
+  // Keep the screen awake while the page is visible.
+  async function wake() {
+    try {
+      if ('wakeLock' in navigator && document.visibilityState === 'visible') {
+        await navigator.wakeLock.request('screen');
+      }
+    } catch (e) { /* not allowed or unsupported: ignore */ }
+  }
+  wake();
+  document.addEventListener('visibilitychange', wake);
+</script>
+</body>
+</html>
