@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Planning Poker</title>
 <meta name="description" content="Planning poker cards for your phone. Swipe to your estimate, then turn the phone around to reveal.">
-<meta name="theme-color" content="#1d3b40">
+<meta name="theme-color" content="#000">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
@@ -15,8 +15,7 @@
 <meta name="apple-mobile-web-app-title" content="Poker">
 <style>
   :root {
-    --bg: #1d3b40;
-    --ink: #1d3b40;
+    --bg: #000;
     --card-w: min(88vw, 49vh);
   }
   @supports (height: 100dvh) {
@@ -63,43 +62,91 @@
     border-radius: 6% / 4.3%;
     box-shadow: 0 0.6em 1.6em rgba(0, 0, 0, 0.35), 0 0.15em 0.4em rgba(0, 0, 0, 0.25);
     container-type: inline-size;
-    display: grid;
-    place-items: center;
-    color: var(--ink);
     user-select: none;
     -webkit-user-select: none;
     -webkit-touch-callout: none;
     touch-action: pan-x;
   }
-  .num {
-    font-weight: 800;
+  .face {
+    position: absolute;
+    inset: calc(var(--card-w) * 0.055);
+    inset: 5.5cqw;
+    border-radius: calc(var(--card-w) * 0.04);
+    border-radius: 4cqw;
+    background: var(--c);
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+  }
+  .face::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: calc(var(--card-w) * 0.7);
+    width: 70cqw;
+    height: calc(var(--card-w) * 1.18);
+    height: 118cqw;
+    background: #fff;
+    border-radius: 50%;
+    transform: translate(-50%, -50%) rotate(30deg);
+  }
+  .num, .corner {
+    font-weight: 900;
+    font-style: italic;
     line-height: 1;
     letter-spacing: -0.04em;
     font-variant-numeric: tabular-nums;
-    font-size: calc(var(--card-w) * 0.56);
-    font-size: 56cqw;
+    paint-order: stroke fill;
+  }
+  .num {
+    position: relative;
+    color: var(--c);
+    font-size: calc(var(--card-w) * 0.58);
+    font-size: 58cqw;
+    padding-right: 0.06em;
+    -webkit-text-stroke: calc(var(--card-w) * 0.022) #111;
+    -webkit-text-stroke: 2.2cqw #111;
+    text-shadow: calc(var(--card-w) * 0.018) calc(var(--card-w) * 0.018) 0 #111;
+    text-shadow: 1.8cqw 1.8cqw 0 #111;
+  }
+  .num.two {
+    font-size: calc(var(--card-w) * 0.4);
+    font-size: 40cqw;
+    -webkit-text-stroke-width: calc(var(--card-w) * 0.018);
+    -webkit-text-stroke-width: 1.8cqw;
   }
   .corner {
     position: absolute;
-    font-weight: 700;
-    line-height: 1;
-    font-size: calc(var(--card-w) * 0.12);
-    font-size: 12cqw;
+    color: #fff;
+    font-size: calc(var(--card-w) * 0.13);
+    font-size: 13cqw;
+    -webkit-text-stroke: calc(var(--card-w) * 0.01) #111;
+    -webkit-text-stroke: 1cqw #111;
+    text-shadow: calc(var(--card-w) * 0.008) calc(var(--card-w) * 0.008) 0 #111;
+    text-shadow: 0.8cqw 0.8cqw 0 #111;
   }
-  .tl { top: 6cqw; left: 7cqw; }
-  .br { bottom: 6cqw; right: 7cqw; transform: rotate(180deg); }
+  .tl {
+    top: calc(var(--card-w) * 0.035); top: 3.5cqw;
+    left: calc(var(--card-w) * 0.045); left: 4.5cqw;
+  }
+  .br {
+    bottom: calc(var(--card-w) * 0.035); bottom: 3.5cqw;
+    right: calc(var(--card-w) * 0.045); right: 4.5cqw;
+    transform: rotate(180deg);
+  }
 </style>
 </head>
 <body>
 <main class="deck" id="deck">
-  <div class="slot"><div class="card" role="img" aria-label="0 points"><span class="corner tl" aria-hidden="true">0</span><span class="num" aria-hidden="true">0</span><span class="corner br" aria-hidden="true">0</span></div></div>
-  <div class="slot"><div class="card" role="img" aria-label="1 point"><span class="corner tl" aria-hidden="true">1</span><span class="num" aria-hidden="true">1</span><span class="corner br" aria-hidden="true">1</span></div></div>
-  <div class="slot"><div class="card" role="img" aria-label="2 points"><span class="corner tl" aria-hidden="true">2</span><span class="num" aria-hidden="true">2</span><span class="corner br" aria-hidden="true">2</span></div></div>
-  <div class="slot"><div class="card" role="img" aria-label="3 points"><span class="corner tl" aria-hidden="true">3</span><span class="num" aria-hidden="true">3</span><span class="corner br" aria-hidden="true">3</span></div></div>
-  <div class="slot"><div class="card" role="img" aria-label="5 points"><span class="corner tl" aria-hidden="true">5</span><span class="num" aria-hidden="true">5</span><span class="corner br" aria-hidden="true">5</span></div></div>
-  <div class="slot"><div class="card" role="img" aria-label="8 points"><span class="corner tl" aria-hidden="true">8</span><span class="num" aria-hidden="true">8</span><span class="corner br" aria-hidden="true">8</span></div></div>
-  <div class="slot"><div class="card" role="img" aria-label="13 points"><span class="corner tl" aria-hidden="true">13</span><span class="num" aria-hidden="true">13</span><span class="corner br" aria-hidden="true">13</span></div></div>
-  <div class="slot"><div class="card" role="img" aria-label="21 points"><span class="corner tl" aria-hidden="true">21</span><span class="num" aria-hidden="true">21</span><span class="corner br" aria-hidden="true">21</span></div></div>
+  <div class="slot"><div class="card" style="--c:#e3242b" role="img" aria-label="0 points"><div class="face"><span class="corner tl" aria-hidden="true">0</span><span class="num" aria-hidden="true">0</span><span class="corner br" aria-hidden="true">0</span></div></div></div>
+  <div class="slot"><div class="card" style="--c:#f47b20" role="img" aria-label="1 point"><div class="face"><span class="corner tl" aria-hidden="true">1</span><span class="num" aria-hidden="true">1</span><span class="corner br" aria-hidden="true">1</span></div></div></div>
+  <div class="slot"><div class="card" style="--c:#f7c600" role="img" aria-label="2 points"><div class="face"><span class="corner tl" aria-hidden="true">2</span><span class="num" aria-hidden="true">2</span><span class="corner br" aria-hidden="true">2</span></div></div></div>
+  <div class="slot"><div class="card" style="--c:#3aa63a" role="img" aria-label="3 points"><div class="face"><span class="corner tl" aria-hidden="true">3</span><span class="num" aria-hidden="true">3</span><span class="corner br" aria-hidden="true">3</span></div></div></div>
+  <div class="slot"><div class="card" style="--c:#00a6a6" role="img" aria-label="5 points"><div class="face"><span class="corner tl" aria-hidden="true">5</span><span class="num" aria-hidden="true">5</span><span class="corner br" aria-hidden="true">5</span></div></div></div>
+  <div class="slot"><div class="card" style="--c:#0b62c4" role="img" aria-label="8 points"><div class="face"><span class="corner tl" aria-hidden="true">8</span><span class="num" aria-hidden="true">8</span><span class="corner br" aria-hidden="true">8</span></div></div></div>
+  <div class="slot"><div class="card" style="--c:#7b3fb5" role="img" aria-label="13 points"><div class="face"><span class="corner tl" aria-hidden="true">13</span><span class="num two" aria-hidden="true">13</span><span class="corner br" aria-hidden="true">13</span></div></div></div>
+  <div class="slot"><div class="card" style="--c:#e83e8c" role="img" aria-label="21 points"><div class="face"><span class="corner tl" aria-hidden="true">21</span><span class="num two" aria-hidden="true">21</span><span class="corner br" aria-hidden="true">21</span></div></div></div>
 </main>
 <script>
   // Always open on card 0.
